@@ -10,11 +10,15 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            videos: []
+            videos: [],
+            selectedVideo: null
         }
         YTSearch(API_KEY, {q: 'node js'})
             .then((result) => {
-                this.setState({videos: result.items});
+                this.setState({
+                    videos: result.items,
+                    selectedVideo: result.items[0]
+                });
             })
             .catch((err) => {
                 console.log(err);
@@ -22,11 +26,15 @@ class App extends Component {
     }
 
     render() {
-        return <div>
-            <SearchBar />
-            <VideoDetail video={this.state.videos[0]} />
-            <VideoList videos={this.state.videos} />
-        </div>
+        return(
+            <div>
+                <SearchBar />
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList
+                    onVideoSelect={selectedVideo => this.setState({selectedVideo})}
+                    videos={this.state.videos} />
+            </div>
+        )
     }
 }
 
