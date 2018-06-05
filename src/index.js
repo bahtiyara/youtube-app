@@ -12,8 +12,24 @@ class App extends Component {
         this.state = {
             videos: [],
             selectedVideo: null
-        }
-        YTSearch(API_KEY, {q: 'node js'})
+        };
+        this.videoSearch('node js');
+    }
+
+    render() {
+        return(
+            <div>
+                <SearchBar onTermChange={(term) => {this.videoSearch(term)}} />
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList
+                    onVideoSelect={selectedVideo => this.setState({selectedVideo})}
+                    videos={this.state.videos} />
+            </div>
+        )
+    }
+
+    videoSearch(term) {
+        YTSearch(API_KEY, {q: term})
             .then((result) => {
                 this.setState({
                     videos: result.items,
@@ -23,18 +39,6 @@ class App extends Component {
             .catch((err) => {
                 console.log(err);
             });
-    }
-
-    render() {
-        return(
-            <div>
-                <SearchBar />
-                <VideoDetail video={this.state.selectedVideo} />
-                <VideoList
-                    onVideoSelect={selectedVideo => this.setState({selectedVideo})}
-                    videos={this.state.videos} />
-            </div>
-        )
     }
 }
 
